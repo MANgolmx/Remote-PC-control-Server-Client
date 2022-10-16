@@ -15,7 +15,7 @@ namespace TCP_Client
         private EditText edtIp, edtport;
         private Button btnConnect;
         private TcpClient client;
-
+        ActionBar actionBar = new Android.App.ActionBar;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);

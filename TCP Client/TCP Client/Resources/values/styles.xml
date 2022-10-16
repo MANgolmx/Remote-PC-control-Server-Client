@@ -1,10 +1,19 @@
 <resources>
 
   <!-- Base application theme. -->
-  <style name="AppTheme" parent="@android:style/Theme.DeviceDefault">
-    <item name="colorPrimary">@color/colorPrimary</item>
-    <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-    <item name="colorAccent">@color/colorAccent</item><item name="android:colorBackground">@android:color/background_dark</item>/><item name="android:windowBackground">@android:color/background_dark</item> /><item name="android:colorAccent">#fff54f4f</item><item name="android:colorControlActivated">#fff85353</item>
+  <style name="AppTheme" parent="@style/Theme.AppCompat">
+    <item name="colorPrimary">#ff1d1d1d</item>
+    <item name="colorPrimaryDark">#ff1d1d1d</item>
+    <item name="colorAccent">#fff54f4f</item>
+    <item name="android:colorAccent">#fff54f4f</item>
+    <item name="android:colorBackground">#ff1d1d1d</item>
+    <item name="android:windowBackground">?android:attr/colorBackground</item>
+    <item name="android:colorPrimary">#ff272727</item>
+    <item name="android:colorControlActivated">#ffff5252</item>
+    <item name="android:textColorPrimary">#ffeceff1</item>
+    <item name="android:textColorSecondary">#fffbe9e7</item>
+    <item name="android:colorControlNormal">#fffbe9e7</item>
+    <item name="android:colorButtonNormal">#ffff5252</item>
   </style>
 
   <style name="AppTheme.NoActionBar">
@@ -15,15 +24,5 @@
   <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
 
   <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
-
-  <style name="Theme.AppCompat">
-    <item name="colorPrimary">@color/colorPrimary</item>
-    <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-    <item name="colorAccent">@color/colorAccent</item>
-    <item name="android:colorBackground">#ff616253</item>
-    <item name="android:windowBackground">?android:attr/colorBackground</item>
-    <item name="android:colorControlActivated">#ffff5252</item>
-    <item name="android:colorAccent">#ffff5252</item>
-  </style>
   
 </resources>
