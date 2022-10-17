@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Timers;
-using System.Drawing.Imaging;
 using System.Drawing;
-using System.IO;
 using Microsoft.Toolkit.Uwp.Notifications;
 
 namespace TCP_Server
@@ -33,14 +26,15 @@ namespace TCP_Server
             IPAddress[] localIp = Dns.GetHostAddresses(Dns.GetHostName());
             foreach (IPAddress address in localIp)
             {
-                if (address.AddressFamily == AddressFamily.InterNetwork)
+                if (address.AddressFamily == AddressFamily.InterNetwork && address.ToString().Contains("192."))
                 {
                     ipString = address.ToString();
                     break;
-                }
+                } else if (address.AddressFamily == AddressFamily.InterNetwork && ipString != "")
+                { ipString = address.ToString(); }
             }
 
-            ep = new IPEndPoint(IPAddress.Parse(ipString), 13031);
+            ParseIpString();
             listener = new TcpListener(ep);
 
             new ToastContentBuilder().AddText("Server started at " + ipString + ":13031").Show();
@@ -208,6 +202,19 @@ namespace TCP_Server
         private void Sleep()
         {
             
+        }
+
+        private void ParseIpString()
+        {
+            try
+            {
+                ep = new IPEndPoint(IPAddress.Parse(ipString), 13031);
+            }
+            catch
+            {
+                new ToastContentBuilder().AddText("Can not connect to " + ipString + ":13031").AddAttributionText("Server closed").Show();
+                Environment.Exit(404);
+            }
         }
     }
 }
