@@ -15,8 +15,8 @@ namespace TCP_Client.Activities
     {
         //private Button btnTakeScreen, btnSleep;
         //private ImageView imageView;
-        private Button btnShutdown, btnDisconnect, btnOpenApp;
-        private EditText edtTime, edtAppName;
+        private Button btnShutdown, btnDisconnect, btnOpenApp, btnSendMessage;
+        private EditText edtTime, edtAppName, edtMessage;
         private Timer checkConnectionTimer;
 
         NetworkStream stream;
@@ -42,8 +42,10 @@ namespace TCP_Client.Activities
             btnShutdown = FindViewById<Button>(Resource.Id.buttonShutdown);
             btnDisconnect = FindViewById<Button>(Resource.Id.buttonDisconnect);
             btnOpenApp = FindViewById<Button>(Resource.Id.buttonOpen);
+            btnSendMessage = FindViewById<Button>(Resource.Id.buttonSendMsg);
             edtTime = FindViewById<EditText>(Resource.Id.editTextTime);
             edtAppName = FindViewById<EditText>(Resource.Id.editTextApp);
+            edtMessage = FindViewById<EditText>(Resource.Id.editTextMsg);
 
             void CheckConnection(Object source, System.Timers.ElapsedEventArgs e)
             {
@@ -54,21 +56,6 @@ namespace TCP_Client.Activities
             }
 
                             //Button clicks\\
-
-            /*btnSleep.Click += delegate
-            {
-                try
-                {
-                    stream = client.GetStream();
-                    String msg = "CMD_SLP";
-                    byte[] message = Encoding.ASCII.GetBytes(msg);
-                    stream.Write(message, 0, message.Length);
-                }
-                catch (Exception e)
-                {
-                    disconnect(client);
-                }
-            };*/
 
             btnShutdown.Click += delegate
             {
@@ -84,24 +71,6 @@ namespace TCP_Client.Activities
                     disconnect(client);
                 }
             };
-
-            /*btnTakeScreen.Click += delegate
-            {
-                try
-                {
-                    stream = client.GetStream();
-                    String msg = "CMD_TSC";
-                    byte[] message = Encoding.ASCII.GetBytes(msg);
-                    stream.Write(message, 0, message.Length);
-                    var data = getData(client);
-                    var image = BitmapFactory.DecodeByteArray(data, 0, data.Length);
-                    imageView.SetImageBitmap(image);
-                }
-                catch (Exception e)
-                {
-                    disconnect(client);
-                }
-            };*/
 
             btnOpenApp.Click += delegate
             {
@@ -134,6 +103,57 @@ namespace TCP_Client.Activities
                     disconnect(client);
                 }
             };
+
+            btnSendMessage.Click += delegate
+            {
+                try
+                {
+                    stream = client.GetStream();
+                    String msg = "CMD_MSG " + edtMessage.Text;
+                    byte[] message = Encoding.ASCII.GetBytes(msg);
+                    stream.Write(message, 0, message.Length);
+                }
+                catch (Exception e) {; }
+                finally
+                {
+                    disconnect(client);
+                }
+            };
+
+                            //Old functions\\
+
+            /*btnSleep.Click += delegate
+            {
+                try
+                {
+                    stream = client.GetStream();
+                    String msg = "CMD_SLP";
+                    byte[] message = Encoding.ASCII.GetBytes(msg);
+                    stream.Write(message, 0, message.Length);
+                }
+                catch (Exception e)
+                {
+                    disconnect(client);
+                }
+            };
+
+            btnTakeScreen.Click += delegate
+            {
+                try
+                {
+                    stream = client.GetStream();
+                    String msg = "CMD_TSC";
+                    byte[] message = Encoding.ASCII.GetBytes(msg);
+                    stream.Write(message, 0, message.Length);
+                    var data = getData(client);
+                    var image = BitmapFactory.DecodeByteArray(data, 0, data.Length);
+                    imageView.SetImageBitmap(image);
+                }
+                catch (Exception e)
+                {
+                    disconnect(client);
+                }
+            };*/
         }
 
         public void disconnect(TcpClient client)
@@ -172,5 +192,7 @@ namespace TCP_Client.Activities
         {
             //base.OnBackPressed();
         }
+
+
     }
 }

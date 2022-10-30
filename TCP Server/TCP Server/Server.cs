@@ -53,7 +53,13 @@ namespace TCP_Server
 
                     if (client.GetStream() == null) Console.WriteLine("Stream is null");
 
-                    if (data.ToUpper().Contains("CMD_LOGOUT"))
+                    if (data.ToUpper().Contains("CMD_MSG"))
+                    {
+                        data = data.Replace("CMD_MSG", "");
+                        data = data.Replace("\0", "");   
+                        new ToastContentBuilder().AddText(data).AddAttributionText("Server received message").Show();
+                    }
+                    else if (data.ToUpper().Contains("CMD_LOGOUT"))
                     {
                         Console.WriteLine("Client disconnected! \n");
 
@@ -156,6 +162,31 @@ namespace TCP_Server
             TransferingData();
         }
 
+        private void Shutdown(int delay)
+        {
+            Process.Start("Shutdown", "-s -t " + delay);
+            Environment.Exit(0);
+        }
+
+        private void ParseIpString()
+        {
+            try
+            {
+                ep = new IPEndPoint(IPAddress.Parse(ipString), 13031);
+            }
+            catch
+            {
+                new ToastContentBuilder().AddText("Can not connect to " + ipString + ":13031").AddAttributionText("Server closed").Show();
+                Environment.Exit(404);
+            }
+        }
+
+
+        //Old functions
+        private void Sleep()
+        {
+            
+        }
         private void sendData(byte[] data, NetworkStream stream)
         {
             int bufferSize = 1024;
@@ -177,7 +208,6 @@ namespace TCP_Server
                 bytesLeft -= curDataSize;
             }
         }
-
         private Bitmap SaveScreenshot()
         {
             using var bmpScreenshot = new Bitmap(1920, 1080);
@@ -191,30 +221,6 @@ namespace TCP_Server
             //bmpScreenshot.Save("filename.jpg", ImageFormat.Bmp);
 
             return bmpScreenshot;
-        }
-
-        private void Shutdown(int delay)
-        {
-            Process.Start("Shutdown", "-s -t " + delay);
-            Environment.Exit(0);
-        }
-
-        private void Sleep()
-        {
-            
-        }
-
-        private void ParseIpString()
-        {
-            try
-            {
-                ep = new IPEndPoint(IPAddress.Parse(ipString), 13031);
-            }
-            catch
-            {
-                new ToastContentBuilder().AddText("Can not connect to " + ipString + ":13031").AddAttributionText("Server closed").Show();
-                Environment.Exit(404);
-            }
         }
     }
 }

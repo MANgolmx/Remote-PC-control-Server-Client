@@ -44,6 +44,24 @@
         android:text="Open"
         android:id="@+id/buttonOpen"/>
 
+    <EditText
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="22dp"
+        android:hint="Message"
+        android:layout_below="@+id/editTextApp"
+        android:id="@+id/editTextMsg"
+        android:inputType="text"/>
+
+    <Button
+        android:layout_width="130dp"
+        android:layout_height="60dp"
+        android:layout_alignBottom="@id/editTextMsg"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="22dp"
+        android:text="Send"
+        android:id="@+id/buttonSendMsg"/>
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="55dp"
