@@ -66,5 +66,10 @@ namespace TCP_Client
 
         }
 
-	}
+        public override void OnBackPressed()
+        {
+            //base.OnBackPressed();
+        }
+
+    }
 }

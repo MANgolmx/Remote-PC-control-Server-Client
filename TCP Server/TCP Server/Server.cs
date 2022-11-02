@@ -111,6 +111,8 @@ namespace TCP_Server
                 }
                 catch (Exception exc)
                 {
+                    new ToastContentBuilder().AddText("Error occured: " + exc.Message).AddAttributionText("Client was disconnected").Show();
+                    
                     Console.WriteLine("Client was disconnected because of an error!");
                     Console.WriteLine(exc.Message + "\n");
 

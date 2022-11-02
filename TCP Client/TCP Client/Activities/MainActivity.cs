@@ -113,8 +113,7 @@ namespace TCP_Client.Activities
                     byte[] message = Encoding.ASCII.GetBytes(msg);
                     stream.Write(message, 0, message.Length);
                 }
-                catch (Exception e) {; }
-                finally
+                catch (Exception e) 
                 {
                     disconnect(client);
                 }
