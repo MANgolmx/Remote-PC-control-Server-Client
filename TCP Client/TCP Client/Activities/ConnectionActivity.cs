@@ -34,6 +34,7 @@ namespace TCP_Client
 
             if (File.Exists(filePath)) {
                 ConnectionIp = File.ReadAllText(filePath);
+                
                 edtIp.Text = ConnectionIp;
             }
 

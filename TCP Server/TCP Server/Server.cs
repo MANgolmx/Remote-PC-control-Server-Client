@@ -15,6 +15,7 @@ namespace TCP_Server
         private static TcpListener listener;
         private static string ipString;
         private static System.Timers.Timer checkConnectionTimer;
+        private static System.Timers.Timer ShutdownTimer;
         IPEndPoint ep;
 
         public Server()
@@ -22,6 +23,10 @@ namespace TCP_Server
             checkConnectionTimer = new System.Timers.Timer(1000);
             checkConnectionTimer.Elapsed += CheckConnection;
             checkConnectionTimer.AutoReset = true;
+
+            ShutdownTimer = new System.Timers.Timer();
+            ShutdownTimer.Elapsed += Shutdown;
+            checkConnectionTimer.AutoReset = false;
 
             IPAddress[] localIp = Dns.GetHostAddresses(Dns.GetHostName());
             foreach (IPAddress address in localIp)
@@ -37,7 +42,7 @@ namespace TCP_Server
             ParseIpString();
             listener = new TcpListener(ep);
 
-            new ToastContentBuilder().AddText("Server started at " + ipString + ":13031").Show();
+            new ToastContentBuilder().AddText("Server started at " + ep.ToString()).Show();
         }
 
         private void TransferingData()
@@ -74,7 +79,15 @@ namespace TCP_Server
                         data = data.Replace("CMD_SHTD4", "");
                         data = new String(data.Where(Char.IsDigit).ToArray());
                         if (data == "" || data == "0") data = "1";
-                        Shutdown(Int32.Parse(data));
+                        {
+                            if (Int32.Parse(data) <= 30) Shutdown(Int32.Parse(data));
+                            else
+                            {
+                                ShutdownTimer.Interval = Int32.Parse(data) * 1000 - 30000;
+                                ShutdownTimer.Enabled = true;
+                            }
+                            new ToastContentBuilder().AddText("Computer will be shutted down in " + ParseTime(Int32.Parse(data))).Show();
+                        }
                     }
                     else if (data.ToUpper().Contains("CMD_OPNAP"))
                     {
@@ -163,13 +176,7 @@ namespace TCP_Server
 
             TransferingData();
         }
-
-        private void Shutdown(int delay)
-        {
-            Process.Start("Shutdown", "-s -t " + delay);
-            Environment.Exit(0);
-        }
-
+        
         private void ParseIpString()
         {
             try
@@ -178,11 +185,45 @@ namespace TCP_Server
             }
             catch
             {
-                new ToastContentBuilder().AddText("Can not connect to " + ipString + ":13031").AddAttributionText("Server closed").Show();
+                new ToastContentBuilder().AddText("Can not open server on " + ipString + ":13031").AddAttributionText("Server closed").Show();
                 Environment.Exit(404);
             }
         }
 
+        private void Shutdown(Object source, ElapsedEventArgs e)
+        {
+            Process.Start("Shutdown", "-s -t 30");
+            Environment.Exit(0);
+        }
+
+        private void Shutdown(int delay)
+        {
+            Process.Start("Shutdown", "-s -t " + delay);
+            Environment.Exit(0);
+        }
+
+        private string ParseTime(double seconds)
+        {
+            seconds = Math.Floor(seconds);
+
+            //Error check
+            if (seconds < 0) return "Error: negative time. " + seconds;
+
+            //Under a minute
+            if (seconds < 60) return seconds + " seconds.";
+
+            //Under an hour
+            if (seconds < 3600)
+            {
+                if (seconds % 60 == 0) return (seconds / 60) + " minutes.";
+                return Math.Floor(seconds / 60) + " minutes " + (seconds % 60) + " seconds.";
+            }
+
+            //The rest
+            if (seconds % 3600 == 0) return (seconds % 3600) + " hours.";
+            if (seconds % 60 == 0) return Math.Floor(seconds / 3600) + " hours " + Math.Floor((seconds % 3600) / 60) + "minutes.";
+            return Math.Floor(seconds / 3600) + " hours " + Math.Floor((seconds % 3600) / 60) + "minutes " + (seconds % 60) + " seconds.";
+        }
 
         //Old functions
         private void Sleep()
