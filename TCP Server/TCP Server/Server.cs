@@ -204,25 +204,27 @@ namespace TCP_Server
 
         private string ParseTime(double seconds)
         {
+            Console.WriteLine(seconds.ToString());
+
             seconds = Math.Floor(seconds);
 
             //Error check
             if (seconds < 0) return "Error: negative time. " + seconds;
 
             //Under a minute
-            if (seconds < 60) return seconds + " seconds.";
+            if (seconds < 60) return seconds + "s.";
 
             //Under an hour
             if (seconds < 3600)
             {
-                if (seconds % 60 == 0) return (seconds / 60) + " minutes.";
-                return Math.Floor(seconds / 60) + " minutes " + (seconds % 60) + " seconds.";
+                if (seconds % 60 == 0) return (seconds / 60) + "m.";
+                return Math.Floor(seconds / 60) + "m " + (seconds % 60) + "s.";
             }
 
             //The rest
-            if (seconds % 3600 == 0) return (seconds % 3600) + " hours.";
-            if (seconds % 60 == 0) return Math.Floor(seconds / 3600) + " hours " + Math.Floor((seconds % 3600) / 60) + "minutes.";
-            return Math.Floor(seconds / 3600) + " hours " + Math.Floor((seconds % 3600) / 60) + "minutes " + (seconds % 60) + " seconds.";
+            if (seconds % 3600 == 0) return (seconds / 3600) + "h.";
+            if (seconds % 60 == 0) return Math.Floor(seconds / 3600) + "h " + Math.Floor((seconds % 3600) / 60) + "m.";
+            return Math.Floor(seconds / 3600) + "h " + Math.Floor((seconds % 3600) / 60) + "m " + (seconds % 60) + "s.";
         }
 
         //Old functions

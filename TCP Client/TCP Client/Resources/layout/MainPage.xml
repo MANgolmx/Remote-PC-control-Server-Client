@@ -9,18 +9,37 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <EditText
-        android:layout_width="200dp"
+        android:layout_width="68dp"
         android:layout_height="60dp"
-        android:layout_marginLeft="22dp"
-        android:hint="Time"
-        android:layout_below="@+id/buttonSleep"
-        android:id="@+id/editTextTime"
+        android:layout_marginLeft="0dp"
+        android:hint="Sec"
+        android:layout_toLeftOf="@+id/buttonShutdown"
+        android:id="@+id/editTextTimeSeconds"
+        android:inputType="number"/>
+
+    <EditText
+        android:layout_width="68dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="0dp"
+        android:hint="Min"
+        android:layout_toLeftOf="@+id/editTextTimeSeconds"
+        android:id="@+id/editTextTimeMinutes"
+        android:inputType="number"/>
+
+    <EditText
+        android:layout_width="68dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="0dp"
+        android:hint="Hour"
+        android:layout_toLeftOf="@+id/editTextTimeMinutes"
+        android:id="@+id/editTextTimeHours"
         android:inputType="number"/>
 
     <Button
         android:layout_width="130dp"
         android:layout_height="60dp"
-        android:layout_alignBottom="@+id/editTextTime"
+        android:layout_marginLeft="12dp"
+        android:layout_alignBottom="@+id/editTextTimeSeconds"
         android:layout_alignParentRight="true"
         android:layout_marginRight="22dp"
         android:text="SHUTDOWN"
@@ -31,7 +50,7 @@
         android:layout_height="60dp"
         android:layout_marginLeft="22dp"
         android:hint="Application"
-        android:layout_below="@+id/editTextTime"
+        android:layout_below="@+id/editTextTimeSeconds"
         android:id="@+id/editTextApp"
         android:inputType="textCapCharacters"/>
 

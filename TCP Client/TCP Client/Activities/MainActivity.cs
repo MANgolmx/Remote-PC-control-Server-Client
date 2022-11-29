@@ -16,7 +16,7 @@ namespace TCP_Client.Activities
         //private Button btnTakeScreen, btnSleep;
         //private ImageView imageView;
         private Button btnShutdown, btnDisconnect, btnOpenApp, btnSendMessage;
-        private EditText edtTime, edtAppName, edtMessage;
+        private EditText edtTimeSec, edtTimeMin, edtTimeHour, edtAppName, edtMessage;
         private Timer checkConnectionTimer;
 
         NetworkStream stream;
@@ -43,7 +43,9 @@ namespace TCP_Client.Activities
             btnDisconnect = FindViewById<Button>(Resource.Id.buttonDisconnect);
             btnOpenApp = FindViewById<Button>(Resource.Id.buttonOpen);
             btnSendMessage = FindViewById<Button>(Resource.Id.buttonSendMsg);
-            edtTime = FindViewById<EditText>(Resource.Id.editTextTime);
+            edtTimeSec = FindViewById<EditText>(Resource.Id.editTextTimeSeconds);
+            edtTimeMin = FindViewById<EditText>(Resource.Id.editTextTimeMinutes);
+            edtTimeHour = FindViewById<EditText>(Resource.Id.editTextTimeHours);
             edtAppName = FindViewById<EditText>(Resource.Id.editTextApp);
             edtMessage = FindViewById<EditText>(Resource.Id.editTextMsg);
 
@@ -62,7 +64,11 @@ namespace TCP_Client.Activities
                 try
                 {
                     stream = client.GetStream();
-                    String msg = "CMD_SHTD" + edtTime.Text;
+                    if (edtTimeHour.Text == "") edtTimeHour.Text = "0";
+                    if (edtTimeMin.Text == "") edtTimeMin.Text = "0";
+                    if (edtTimeSec.Text == "") edtTimeSec.Text = "0";
+                    int seconds = Int32.Parse(edtTimeSec.Text) + 60 * Int32.Parse(edtTimeMin.Text) + 3600 * Int32.Parse(edtTimeHour.Text);
+                    String msg = "CMD_SHTD " + seconds;
                     byte[] message = Encoding.ASCII.GetBytes(msg);
                     stream.Write(message, 0, message.Length);
                 }
