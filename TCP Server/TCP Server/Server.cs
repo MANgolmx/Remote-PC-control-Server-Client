@@ -20,6 +20,7 @@ namespace TCP_Server
 
         public Server()
         {
+            
             checkConnectionTimer = new System.Timers.Timer(1000);
             checkConnectionTimer.Elapsed += CheckConnection;
             checkConnectionTimer.AutoReset = true;
@@ -28,6 +29,7 @@ namespace TCP_Server
             ShutdownTimer.Elapsed += Shutdown;
             checkConnectionTimer.AutoReset = false;
 
+            ep = IPEndPoint.Parse("0.0.0.0");
             IPAddress[] localIp = Dns.GetHostAddresses(Dns.GetHostName());
             foreach (IPAddress address in localIp)
             {
@@ -39,7 +41,7 @@ namespace TCP_Server
                 { ipString = address.ToString(); }
             }
 
-            ParseIpString();
+            ParseIpString(ep, ipString);
             listener = new TcpListener(ep);
 
             new ToastContentBuilder().AddText("Server started at " + ep.ToString()).Show();
@@ -177,15 +179,15 @@ namespace TCP_Server
             TransferingData();
         }
         
-        private void ParseIpString()
+        private void ParseIpString(IPEndPoint epIP, string IpString)
         {
             try
             {
-                ep = new IPEndPoint(IPAddress.Parse(ipString), 13031);
+                epIP = new IPEndPoint(IPAddress.Parse(IpString), 13031);
             }
             catch
             {
-                new ToastContentBuilder().AddText("Can not open server on " + ipString + ":13031").AddAttributionText("Server closed").Show();
+                new ToastContentBuilder().AddText("Can not open server on " + IpString + ":13031").AddAttributionText("Server closed").Show();
                 Environment.Exit(404);
             }
         }
