@@ -41,7 +41,7 @@ namespace TCP_Server
                 { ipString = address.ToString(); }
             }
 
-            ParseIpString(ep, ipString);
+            ParseIpString();
             listener = new TcpListener(ep);
 
             new ToastContentBuilder().AddText("Server started at " + ep.ToString()).Show();
@@ -179,15 +179,15 @@ namespace TCP_Server
             TransferingData();
         }
         
-        private void ParseIpString(IPEndPoint epIP, string IpString)
+        private void ParseIpString()
         {
             try
             {
-                epIP = new IPEndPoint(IPAddress.Parse(IpString), 13031);
+                ep = new IPEndPoint(IPAddress.Parse(ipString), 13031);
             }
             catch
             {
-                new ToastContentBuilder().AddText("Can not open server on " + IpString + ":13031").AddAttributionText("Server closed").Show();
+                new ToastContentBuilder().AddText("Can not open server on " + ipString + ":13031").AddAttributionText("Server closed").Show();
                 Environment.Exit(404);
             }
         }
