@@ -12,7 +12,7 @@ namespace TCP_Client
     [Activity(MainLauncher = true)]
     public class ConectionActivity : AppCompatActivity
     {
-        private EditText edtIp, edtport;
+        private EditText edtIp, edtPort;
         private Button btnConnect;
         private TcpClient client;
         
@@ -26,7 +26,7 @@ namespace TCP_Client
             SetContentView(Resource.Layout.ConnectionPage);
             
             edtIp = FindViewById<EditText>(Resource.Id.editTextIP);
-            edtport = FindViewById<EditText>(Resource.Id.editTextPort);
+            edtPort = FindViewById<EditText>(Resource.Id.editTextPort);
             btnConnect = FindViewById<Button>(Resource.Id.buttonConnect);
             
             string filePath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), "ConnectionIP.txt");
@@ -34,18 +34,20 @@ namespace TCP_Client
 
             if (File.Exists(filePath)) {
                 ConnectionIp = File.ReadAllText(filePath);
-                
-                edtIp.Text = ConnectionIp;
+
+                var ip = ConnectionIp.Split(':');
+                edtIp.Text = ip[0];
+                edtPort.Text = ip[1];
             }
 
             btnConnect.Click += async delegate
             {
                 try
                 {
-                    await client.ConnectAsync(edtIp.Text, Convert.ToInt32(edtport.Text));
+                    await client.ConnectAsync(edtIp.Text, Convert.ToInt32(edtPort.Text));
                     if (client.Connected)
                     {
-                        ConnectionIp = edtIp.Text;
+                        ConnectionIp = edtIp.Text + ':' + edtPort.Text;
                         File.WriteAllText(filePath, ConnectionIp);
 
                         Connection.Connection.Instance.client = client;

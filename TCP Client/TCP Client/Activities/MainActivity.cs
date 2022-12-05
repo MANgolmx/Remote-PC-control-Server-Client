@@ -16,7 +16,7 @@ namespace TCP_Client.Activities
         //private Button btnTakeScreen, btnSleep;
         //private ImageView imageView;
         private Button btnShutdown, btnDisconnect, btnOpenApp, btnSendMessage;
-        private EditText edtTime, edtAppName, edtMessage;
+        private EditText edtTimeSeconds, edtTimeMinutes, edtSongs, edtAppName, edtMessage;
         private Timer checkConnectionTimer;
 
         NetworkStream stream;
@@ -43,7 +43,9 @@ namespace TCP_Client.Activities
             btnDisconnect = FindViewById<Button>(Resource.Id.buttonDisconnect);
             btnOpenApp = FindViewById<Button>(Resource.Id.buttonOpen);
             btnSendMessage = FindViewById<Button>(Resource.Id.buttonSendMsg);
-            edtTime = FindViewById<EditText>(Resource.Id.editTextTime);
+            edtTimeSeconds = FindViewById<EditText>(Resource.Id.editTextTimeSeconds);
+            edtTimeMinutes = FindViewById<EditText>(Resource.Id.editTextTimeMinutes);
+            edtSongs = FindViewById<EditText>(Resource.Id.editTextSongs);
             edtAppName = FindViewById<EditText>(Resource.Id.editTextApp);
             edtMessage = FindViewById<EditText>(Resource.Id.editTextMsg);
 
@@ -62,9 +64,39 @@ namespace TCP_Client.Activities
                 try
                 {
                     stream = client.GetStream();
-                    String msg = "CMD_SHTD" + edtTime.Text;
-                    byte[] message = Encoding.ASCII.GetBytes(msg);
-                    stream.Write(message, 0, message.Length);
+                    String msg = "CMD_SHTD 0";
+
+                    if (edtTimeSeconds.Text == "" && edtTimeMinutes.Text == "" || edtTimeSeconds.Text == "0" && edtTimeMinutes.Text == "0" ||
+                        edtTimeSeconds.Text == "" && edtTimeMinutes.Text == "0" || edtTimeSeconds.Text == "0" && edtTimeMinutes.Text == "")
+                    {
+                        if (edtSongs.Text != "" && edtAppName.Text != "0")
+                        {
+                            msg = "CMD_SONGSHTD " + edtSongs.Text;
+                            SendMessage(msg);
+                            return;
+                        }
+                        else
+                        { 
+                            SendMessage(msg);
+                            return;
+                        }
+                    }
+                    if (edtTimeMinutes.Text == "" || edtTimeMinutes.Text == "0")
+                    {
+                        msg = "CMD_SHTD " + edtTimeSeconds.Text;
+                        SendMessage(msg);
+                        return;
+                    }
+
+                    if (edtTimeSeconds.Text == "" || edtTimeSeconds.Text == "0")
+                    {
+                        msg = "CMD_SHTD " + Int32.Parse(edtTimeMinutes.Text) * 60;
+                        SendMessage(msg);
+                        return;
+                    }
+
+                    msg = "CMD_SHTD " + (Int32.Parse(edtTimeMinutes.Text) * 60 + Int32.Parse(edtTimeSeconds.Text));
+                    SendMessage(msg);
                 }
                 catch (Exception e)
                 {
@@ -79,8 +111,7 @@ namespace TCP_Client.Activities
                 {
                     stream = client.GetStream();
                     String msg = "CMD_OPNAP " + edtAppName.Text;
-                    byte[] message = Encoding.ASCII.GetBytes(msg);
-                    stream.Write(message, 0, message.Length);
+                    SendMessage(msg);
                 }
                 catch (Exception e)
                 {
@@ -94,8 +125,7 @@ namespace TCP_Client.Activities
                 {
                     stream = client.GetStream();
                     String msg = "CMD_LOGOUT";
-                    byte[] message = Encoding.ASCII.GetBytes(msg);
-                    stream.Write(message, 0, message.Length);
+                    SendMessage(msg);
                 }
                 catch (Exception e) {; }
                 finally
@@ -110,14 +140,19 @@ namespace TCP_Client.Activities
                 {
                     stream = client.GetStream();
                     String msg = "CMD_MSG " + edtMessage.Text;
-                    byte[] message = Encoding.ASCII.GetBytes(msg);
-                    stream.Write(message, 0, message.Length);
+                    SendMessage(msg);
                 }
                 catch (Exception e) 
                 {
                     disconnect(client);
                 }
             };
+
+            void SendMessage(String msg)
+            {
+                byte[] message = Encoding.ASCII.GetBytes(msg);
+                stream.Write(message, 0, message.Length);
+            }
 
                             //Old functions\\
 

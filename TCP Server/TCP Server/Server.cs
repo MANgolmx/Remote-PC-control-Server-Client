@@ -9,10 +9,14 @@ using System.Linq;
 using System.IO;
 using Microsoft.Toolkit.Uwp.Notifications;
 
+
 namespace TCP_Server
 {
+
     internal class Server
     {
+        private static int Port = 13031;
+
         public static TcpClient client = new TcpClient();
 
         private static TcpListener listener;
@@ -200,11 +204,11 @@ namespace TCP_Server
         {
             try
             {
-                ep = new IPEndPoint(IPAddress.Parse(ipString), 13031);
+                ep = new IPEndPoint(IPAddress.Parse(ipString), Port);
             }
             catch
             {
-                new ToastContentBuilder().AddText("Can not open server on " + ipString + ":13031").AddAttributionText("Server closed").Show();
+                new ToastContentBuilder().AddText("Can not open server on " + ipString + Port).AddAttributionText("Server closed").Show();
                 Environment.Exit(404);
             }
         }
@@ -240,8 +244,8 @@ namespace TCP_Server
 
             //The rest
             if (seconds % 3600 == 0) return (seconds / 3600) + " hours.";
-            if (seconds % 60 == 0) return Math.Floor(seconds / 3600) + " hours " + Math.Floor((seconds % 3600) / 60) + "minutes.";
-            return Math.Floor(seconds / 3600) + " hours " + Math.Floor((seconds % 3600) / 60) + "minutes " + (seconds % 60) + " seconds.";
+            if (seconds % 60 == 0) return Math.Floor(seconds / 3600) + " hours " + Math.Floor((seconds % 3600) / 60) + " minutes.";
+            return Math.Floor(seconds / 3600) + " hours " + Math.Floor((seconds % 3600) / 60) + " minutes " + (seconds % 60) + " seconds.";
         }
 
         /*//Old functions

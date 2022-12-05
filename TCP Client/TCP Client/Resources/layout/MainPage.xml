@@ -9,18 +9,33 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <EditText
-        android:layout_width="200dp"
+        android:layout_width="66dp"
+        android:layout_height="60dp"
+        android:hint="Sec"
+        android:id="@+id/editTextTimeSeconds"
+        android:layout_toRightOf="@+id/editTextTimeMinutes"
+        android:inputType="number"/>
+
+     <EditText
+        android:layout_width="66dp"
+        android:layout_height="60dp"
+        android:hint="Min"
+        android:id="@+id/editTextTimeMinutes"
+        android:layout_toRightOf="@+id/editTextSongs"
+        android:inputType="number"/>
+
+     <EditText
+        android:layout_width="67dp"
         android:layout_height="60dp"
         android:layout_marginLeft="22dp"
-        android:hint="Time"
-        android:layout_below="@+id/buttonSleep"
-        android:id="@+id/editTextTime"
+        android:hint="Songs"
+        android:id="@+id/editTextSongs"
         android:inputType="number"/>
 
     <Button
         android:layout_width="130dp"
         android:layout_height="60dp"
-        android:layout_alignBottom="@+id/editTextTime"
+        android:layout_alignBottom="@+id/editTextTimeSeconds"
         android:layout_alignParentRight="true"
         android:layout_marginRight="22dp"
         android:text="SHUTDOWN"
@@ -31,7 +46,7 @@
         android:layout_height="60dp"
         android:layout_marginLeft="22dp"
         android:hint="Application"
-        android:layout_below="@+id/editTextTime"
+        android:layout_below="@+id/editTextTimeSeconds"
         android:id="@+id/editTextApp"
         android:inputType="textCapCharacters"/>
 
