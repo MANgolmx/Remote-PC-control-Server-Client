@@ -22,7 +22,7 @@ public class MusicShutdown
         Console.WriteLine("Initializing...");
         try
         {
-            MusicCheckTimer = new System.Timers.Timer(1000);
+            MusicCheckTimer = new System.Timers.Timer(200);
             MusicCheckTimer.AutoReset = true;
             MusicCheckTimer.Elapsed += CheckMusic;
 
@@ -54,7 +54,7 @@ public class MusicShutdown
                 oldMediaProperties = mediaProperties;
                 if (MusicCounter == 0)
                 {
-                    //Process.Start("Shutdown", "-s -t 1");
+                    Process.Start("Shutdown", "-s -t 1");
                     Environment.Exit(0);
                 }
                 Console.WriteLine("Song changed; Left - {0}", MusicCounter);
