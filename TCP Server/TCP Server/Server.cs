@@ -1,9 +1,12 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Timers;
 using System.Drawing;
+using System.Linq;
+using System.IO;
 using Microsoft.Toolkit.Uwp.Notifications;
 
 namespace TCP_Server
@@ -14,18 +17,20 @@ namespace TCP_Server
 
         private static TcpListener listener;
         private static string ipString;
-        private static System.Timers.Timer checkConnectionTimer;
-        private static System.Timers.Timer ShutdownTimer;
+        private static Timer checkConnectionTimer;
+        private static Timer ShutdownTimer;
+        private static MusicShutdown musicShutdown;
         IPEndPoint ep;
 
         public Server()
         {
-            
-            checkConnectionTimer = new System.Timers.Timer(1000);
+            musicShutdown = new MusicShutdown();
+
+            checkConnectionTimer = new Timer(1000);
             checkConnectionTimer.Elapsed += CheckConnection;
             checkConnectionTimer.AutoReset = true;
 
-            ShutdownTimer = new System.Timers.Timer();
+            ShutdownTimer = new Timer();
             ShutdownTimer.Elapsed += Shutdown;
             checkConnectionTimer.AutoReset = false;
 
@@ -47,7 +52,7 @@ namespace TCP_Server
             new ToastContentBuilder().AddText("Server started at " + ep.ToString()).Show();
         }
 
-        private void TransferingData()
+        private async void TransferingData()
         {
             while (client.Connected)
             {
@@ -78,24 +83,36 @@ namespace TCP_Server
                     else if (data.ToUpper().Contains("CMD_SHTD"))
                     {
                         Console.WriteLine("Pc is going to Shutdown!");
-                        data = data.Replace("CMD_SHTD4", "");
+                        data = data.Replace("CMD_SHTD", "");
                         data = new String(data.Where(Char.IsDigit).ToArray());
                         if (data == "" || data == "0") data = "1";
+                        
+                        if (Int32.Parse(data) <= 30) Shutdown(Int32.Parse(data));
+                        else
                         {
-                            if (Int32.Parse(data) <= 30) Shutdown(Int32.Parse(data));
-                            else
-                            {
-                                ShutdownTimer.Interval = Int32.Parse(data) * 1000 - 30000;
-                                ShutdownTimer.Enabled = true;
-                            }
-                            new ToastContentBuilder().AddText("Computer will be shutted down in " + ParseTime(Int32.Parse(data))).Show();
+                            ShutdownTimer.Interval = Int32.Parse(data) * 1000 - 30000;
+                            ShutdownTimer.Enabled = true;
                         }
+                        new ToastContentBuilder().AddText("Computer will be shutted down in " + ParseTime(Int32.Parse(data))).Show();
+                        
+                    }
+                    else if (data.ToUpper().Contains("CMD_SONGSHTD"))
+                    {
+                        Console.WriteLine("Pc is going to Shutdown!");
+                        data = data.Replace("CMD_SONGSHTD", "");
+                        data = new String(data.Where(Char.IsDigit).ToArray());
+                        if (data == "" || data == "0") continue;
+
+                        await musicShutdown.Initializing(Int32.Parse(data));
+
+                        new ToastContentBuilder().AddText("Computer will be shutted down after " + data + " songs.").Show();
                     }
                     else if (data.ToUpper().Contains("CMD_OPNAP"))
                     {
+                        
                         Console.Write("Opening app ");
                         data = data.Replace("CMD_OPNAP ", "");
-                        data = new String(data.Where(Char.IsLetterOrDigit).ToArray());
+                        data = new string(data.Where(Char.IsLetterOrDigit).ToArray());
                         Console.WriteLine(data.ToUpper());
 
                         var allFiles = Directory.GetFiles("C:\\Programs", data.ToUpper() + ".lnk");
@@ -222,12 +239,12 @@ namespace TCP_Server
             }
 
             //The rest
-            if (seconds % 3600 == 0) return (seconds % 3600) + " hours.";
+            if (seconds % 3600 == 0) return (seconds / 3600) + " hours.";
             if (seconds % 60 == 0) return Math.Floor(seconds / 3600) + " hours " + Math.Floor((seconds % 3600) / 60) + "minutes.";
             return Math.Floor(seconds / 3600) + " hours " + Math.Floor((seconds % 3600) / 60) + "minutes " + (seconds % 60) + " seconds.";
         }
 
-        //Old functions
+        /*//Old functions
         private void Sleep()
         {
             
@@ -266,6 +283,6 @@ namespace TCP_Server
             //bmpScreenshot.Save("filename.jpg", ImageFormat.Bmp);
 
             return bmpScreenshot;
-        }
+        }*/
     }
 }
