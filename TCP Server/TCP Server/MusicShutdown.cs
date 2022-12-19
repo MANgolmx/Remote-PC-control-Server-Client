@@ -1,10 +1,13 @@
 ﻿using Microsoft.Toolkit.Uwp.Notifications;
 using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using Windows.Media.Control;
+using WindowsInput.Native;
+using WindowsInput;
 
 public class MusicShutdown
 {
@@ -31,7 +34,7 @@ public class MusicShutdown
             gsmtcsm = await GetSystemMediaTransportControlsSessionManager();
             mediaProperties = await GetMediaProperties(gsmtcsm.GetCurrentSession());
             oldMediaProperties = mediaProperties;
-            
+
             MusicCheckTimer.Start();
         } catch (Exception exc)
         {
@@ -54,10 +57,12 @@ public class MusicShutdown
                 oldMediaProperties = mediaProperties;
                 if (MusicCounter == 0)
                 {
-                    Process.Start("Shutdown", "-s -t 1");
+                    //Process.Start("Shutdown", "-s -t 1");
+
+                    Console.WriteLine("*PC shutted down*");
                     Environment.Exit(0);
                 }
-                Console.WriteLine("Song changed; Left - {0}", MusicCounter);
+                Console.WriteLine("Song {0} changed; Left - {1}", mediaProperties.Title, MusicCounter);
             }
         } catch(Exception exc)
         {
