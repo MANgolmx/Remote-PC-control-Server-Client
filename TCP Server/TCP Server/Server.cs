@@ -248,6 +248,9 @@ namespace TCP_Server
             return Math.Floor(seconds / 3600) + " hours " + Math.Floor((seconds % 3600) / 60) + " minutes " + (seconds % 60) + " seconds.";
         }
 
+    }
+}
+
         /*//Old functions
         private void Sleep()
         {
@@ -288,5 +291,3 @@ namespace TCP_Server
 
             return bmpScreenshot;
         }*/
-    }
-}
