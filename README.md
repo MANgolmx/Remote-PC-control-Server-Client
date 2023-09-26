@@ -15,5 +15,5 @@ Press "Connect" button on your phone and all should be done!
 First of all you will se input fields "Songs", "Min", "Sec" and a Shutdown button. You can put in time in which PC will be turned off and press the Shutdown button (if you leave everything blank it will turn off imideatly).
 If you want your PC to turn off after a couple of songs or YT vidios you can set it in "Songs" input field.
 Also, you can see "Message" input field. It will create windows notification with message given in it.
-And lasly you can see "Application" field with Open button. It can open applications on your PC but you need to set up it. To do so, you need to create "Programs" folder on your System disk.
+\nAnd lastly you can see "Application" field with Open button. It can open applications on your PC but you need to set up it. To do so, you need to create "Programs" folder on your System disk.
 There you can put any shortcuts for applications that you want. Once that done, you can open them up through your client.
