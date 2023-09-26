@@ -80,15 +80,6 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:layout_alignBottom="@id/buttonDisconnect"
-        android:layout_marginBottom="63dp"
-        android:layout_marginHorizontal="22dp"
-        android:text="Standart preset"
-        android:id="@+id/buttonChangePreset"/>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="10dp"
         android:layout_marginHorizontal="22dp"

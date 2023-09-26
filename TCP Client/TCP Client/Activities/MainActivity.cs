@@ -7,6 +7,8 @@ using System.Net.Sockets;
 using System.Text;
 using System.Timers;
 using AndroidX.AppCompat.App;
+using System.Diagnostics;
+using System.Linq;
 
 namespace TCP_Client.Activities
 {
@@ -15,14 +17,18 @@ namespace TCP_Client.Activities
     {
         //private Button btnTakeScreen, btnSleep;
         //private ImageView imageView;
-        private Button btnShutdown, btnDisconnect, btnOpenApp, btnSendMessage;
+        private Button btnShutdown, btnDisconnect, btnOpenApp, btnSendMessage, btnChangeLEDPreset;
         private EditText edtTimeSeconds, edtTimeMinutes, edtSongs, edtAppName, edtMessage;
         private Timer checkConnectionTimer;
 
         NetworkStream stream;
 
+        enum Presets { STANDART, AUTO, MUSIC}
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            Presets preset = Presets.STANDART;
+
             base.OnCreate(savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             var client = Connection.Connection.Instance.client;
@@ -43,11 +49,13 @@ namespace TCP_Client.Activities
             btnDisconnect = FindViewById<Button>(Resource.Id.buttonDisconnect);
             btnOpenApp = FindViewById<Button>(Resource.Id.buttonOpen);
             btnSendMessage = FindViewById<Button>(Resource.Id.buttonSendMsg);
+            btnChangeLEDPreset = FindViewById<Button>(Resource.Id.buttonChangePreset);
             edtTimeSeconds = FindViewById<EditText>(Resource.Id.editTextTimeSeconds);
             edtTimeMinutes = FindViewById<EditText>(Resource.Id.editTextTimeMinutes);
             edtSongs = FindViewById<EditText>(Resource.Id.editTextSongs);
             edtAppName = FindViewById<EditText>(Resource.Id.editTextApp);
             edtMessage = FindViewById<EditText>(Resource.Id.editTextMsg);
+
 
             void CheckConnection(Object source, System.Timers.ElapsedEventArgs e)
             {
@@ -57,7 +65,49 @@ namespace TCP_Client.Activities
                 }
             }
 
-                            //Button clicks\\
+            try
+            {
+                stream = client.GetStream();
+                String msg = "CMD_GETPRESET";
+                SendMessage(msg);
+                Stopwatch sw = Stopwatch.StartNew();
+                while (true)
+                {
+                    if(sw.ElapsedMilliseconds > 10000)
+                    {
+                        break;
+                    }
+
+                    const int bytesize = 1024 * 1024;
+                    byte[] buffer = new byte[bytesize];
+                    string x = client.GetStream().Read(buffer, 0, bytesize).ToString();
+                    var data = ASCIIEncoding.ASCII.GetString(buffer);
+
+                    if (data.ToUpper().Contains("RQST_LEDPRESET"))
+                    {
+                        data = data.Replace("RQST_LEDPRESET", "");
+                        data = new String(data.Where(Char.IsDigit).ToArray());
+                        preset = (Presets)Int32.Parse(data);
+                        switch(preset)
+                        {
+                            case Presets.STANDART:
+                                btnChangeLEDPreset.Text="STANDART PRESET";
+                                break;
+                            case Presets.AUTO:
+                                btnChangeLEDPreset.Text="AUTO PRESET";
+                                break;
+                            case Presets.MUSIC:
+                                btnChangeLEDPreset.Text="MUSIC PRESET";
+                                break;
+                        }
+                        break;
+                    }
+                }
+            }
+            catch (Exception e)
+            { }
+
+            //Button clicks\\
 
             btnShutdown.Click += delegate
             {
@@ -69,7 +119,7 @@ namespace TCP_Client.Activities
                     if (edtTimeSeconds.Text == "" && edtTimeMinutes.Text == "" || edtTimeSeconds.Text == "0" && edtTimeMinutes.Text == "0" ||
                         edtTimeSeconds.Text == "" && edtTimeMinutes.Text == "0" || edtTimeSeconds.Text == "0" && edtTimeMinutes.Text == "")
                     {
-                        if (edtSongs.Text != "" && edtAppName.Text != "0")
+                        if (edtSongs.Text != "" && edtSongs.Text != "0")
                         {
                             msg = "CMD_SONGSHTD " + edtSongs.Text;
                             SendMessage(msg);
@@ -148,11 +198,28 @@ namespace TCP_Client.Activities
                 }
             };
 
+            btnChangeLEDPreset.Click += delegate
+            {
+                try
+                {
+                    stream = client.GetStream();
+
+                    preset = (Presets)(((int)preset) + 1 % 3);
+                    String msg = "CMD_LEDPRESETCHANGE " + ((int)preset).ToString();
+                    SendMessage(msg);
+                }
+                catch (Exception e)
+                {
+                    disconnect(client);
+                }
+            };
+
             void SendMessage(String msg)
             {
                 byte[] message = Encoding.ASCII.GetBytes(msg);
                 stream.Write(message, 0, message.Length);
             }
+
 
                             //Old functions\\
 

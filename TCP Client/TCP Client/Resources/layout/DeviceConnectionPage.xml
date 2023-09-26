@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="HardcodedText"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:hint="Device name"
+        android:id="@+id/editTextDeviceName"
+        android:layout_marginHorizontal="22px"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:hint="Device url"
+        android:id="@+id/editTextDeviceUrl"
+        android:inputType="textWebEditText"
+        android:layout_marginHorizontal="22px"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="ADD"
+        android:id="@+id/buttonAddConnectionDevice" 
+        android:layout_marginHorizontal="22px"/>
+
+</LinearLayout>

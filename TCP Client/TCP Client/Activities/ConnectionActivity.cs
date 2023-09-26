@@ -7,13 +7,13 @@ using System.Net.Sockets;
 using Android.Content;
 using System.IO;
 
-namespace TCP_Client
+namespace TCP_Client.Activities
 {
     [Activity(MainLauncher = true)]
     public class ConectionActivity : AppCompatActivity
     {
         private EditText edtIp, edtPort;
-        private Button btnConnect;
+        private Button btnConnect, btnAddDevice, btnShowDevices;
         private TcpClient client;
         
         protected override void OnCreate(Bundle savedInstanceState)
@@ -28,7 +28,9 @@ namespace TCP_Client
             edtIp = FindViewById<EditText>(Resource.Id.editTextIP);
             edtPort = FindViewById<EditText>(Resource.Id.editTextPort);
             btnConnect = FindViewById<Button>(Resource.Id.buttonConnect);
-            
+            btnAddDevice = FindViewById<Button>(Resource.Id.buttonAddDevice);
+            btnShowDevices = FindViewById<Button>(Resource.Id.buttonShowAllDevices);
+
             string filePath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), "ConnectionIP.txt");
             string ConnectionIp;
 
@@ -67,6 +69,17 @@ namespace TCP_Client
                 }
             };
 
+            btnAddDevice.Click += delegate
+            {
+                Intent intent = new Intent(this, typeof(Activities.DeviceConnectionActivity));
+                StartActivity(intent);
+            };
+
+            btnShowDevices.Click += delegate
+            {
+                Intent intent = new Intent(this, typeof(Activities.DeviceMenuActivity));
+                StartActivity(intent);
+            };
         }
 
         public override void OnBackPressed()
